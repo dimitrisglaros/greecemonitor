@@ -48,7 +48,7 @@ export const COMMANDS: Command[] = [
   { id: 'layers:finance', keywords: ['finance layers', 'show finance', 'financial'], label: 'Show finance layers', icon: '\u{1F4B0}', category: 'layers' },
   { id: 'layers:infra', keywords: ['infrastructure', 'infra layers', 'show infrastructure'], label: 'Show infrastructure layers', icon: '\u{1F3D7}\uFE0F', category: 'layers' },
   { id: 'layers:intel', keywords: ['intelligence', 'intel layers', 'show intel', 'conflicts only'], label: 'Show intelligence layers', icon: '\u{1F50D}', category: 'layers' },
-  { id: 'layers:fireWeatherRisk', keywords: ['fires weather risk', 'fire weather risk', 'wildfire weather', 'foties kairos epikindinothta', 'foties kairos provlepsi kai keravnous'], label: 'Show fires + weather + risk layers', icon: '\u{1F525}', category: 'layers' },
+  { id: 'layers:fireWeatherRisk', keywords: ['fires weather risk', 'fire weather risk', 'wildfire weather', 'foties kairos epikindinothta', 'fwties kairo epikindinothtas', 'foties kairos provlepsi kai keravnous', 'fwties kairo provlepsi kai keravnous'], label: 'Show fires + weather + risk layers', icon: '\u{1F525}', category: 'layers' },
   { id: 'layers:all', keywords: ['all layers', 'show all', 'enable all'], label: 'Enable all layers', icon: '\u{1F441}\uFE0F', category: 'layers' },
   { id: 'layers:none', keywords: ['hide all', 'clear layers', 'no layers', 'disable all'], label: 'Hide all layers', icon: '\u{1F6AB}', category: 'layers' },
   { id: 'layers:minimal', keywords: ['minimal', 'minimal layers', 'clean'], label: 'Minimal layers (conflicts + hotspots)', icon: '\u2728', category: 'layers' },
