@@ -103,6 +103,36 @@ describe('LiveNewsPanel instantiation guard', () => {
     );
   });
 
+  it('panel-layout.ts resolves user country and gates live-news to GR', () => {
+    const layout = src('src/app/panel-layout.ts');
+    assert.ok(
+      layout.includes('const countryCode = await resolveUserCountryCode();'),
+      'panel-layout.ts must resolve user country code before rendering panels',
+    );
+    assert.ok(
+      layout.includes("this.liveNewsEnabledForCountry = countryCode?.toUpperCase() === 'GR';"),
+      'panel-layout.ts must gate live-news enablement to GR country code',
+    );
+  });
+
+  it('panel-layout.ts live-news creation checks liveNewsEnabledForCountry', () => {
+    const layout = src('src/app/panel-layout.ts');
+    const guardBlock = layout.match(/shouldCreatePanel\('live-news'\)[^}]*liveNewsEnabledForCountry[^}]*getDefaultLiveChannels\(\)\.length/s);
+    assert.ok(
+      guardBlock,
+      "panel-layout.ts must include liveNewsEnabledForCountry in the live-news creation guard",
+    );
+  });
+
+  it('mountLiveNewsIfReady bails when country is not GR', () => {
+    const layout = src('src/app/panel-layout.ts');
+    const mountBlock = layout.match(/mountLiveNewsIfReady\(\): void \{[\s\S]*?if \(!this\.liveNewsEnabledForCountry\) return;/);
+    assert.ok(
+      mountBlock,
+      'mountLiveNewsIfReady() must return early when live news is not enabled for the user country',
+    );
+  });
+
   // -------------------------------------------------------------------------
   // 4. Mid-session lazy instantiation path
   //    When a happy-variant user adds channels after page load, the panel
