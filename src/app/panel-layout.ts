@@ -331,6 +331,9 @@ export class PanelLayoutManager implements AppModule {
 
   async init(): Promise<void> {
     const countryCode = await resolveUserCountryCode();
+    if (!countryCode) {
+      console.warn('[PanelLayout] Unable to resolve user country; live-news will be unavailable (GR only).');
+    }
     this.liveNewsEnabledForCountry = countryCode?.toUpperCase() === 'GR';
     await this.renderLayout();
 

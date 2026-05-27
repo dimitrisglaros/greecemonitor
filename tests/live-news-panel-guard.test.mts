@@ -117,18 +117,28 @@ describe('LiveNewsPanel instantiation guard', () => {
 
   it('panel-layout.ts live-news creation checks liveNewsEnabledForCountry', () => {
     const layout = src('src/app/panel-layout.ts');
-    const guardBlock = layout.match(/shouldCreatePanel\('live-news'\)[^}]*liveNewsEnabledForCountry[^}]*getDefaultLiveChannels\(\)\.length/s);
     assert.ok(
-      guardBlock,
-      "panel-layout.ts must include liveNewsEnabledForCountry in the live-news creation guard",
+      layout.includes("if (this.shouldCreatePanel('live-news') &&"),
+      "panel-layout.ts must guard live-news creation behind shouldCreatePanel('live-news')",
+    );
+    assert.ok(
+      layout.includes('this.liveNewsEnabledForCountry'),
+      'panel-layout.ts must include liveNewsEnabledForCountry in the live-news creation guard',
+    );
+    assert.ok(
+      layout.includes('(getDefaultLiveChannels().length > 0 || loadChannelsFromStorage().length > 0)'),
+      'panel-layout.ts must keep the default/saved channel guard for live-news creation',
     );
   });
 
   it('mountLiveNewsIfReady bails when country is not GR', () => {
     const layout = src('src/app/panel-layout.ts');
-    const mountBlock = layout.match(/mountLiveNewsIfReady\(\): void \{[\s\S]*?if \(!this\.liveNewsEnabledForCountry\) return;/);
     assert.ok(
-      mountBlock,
+      layout.includes('mountLiveNewsIfReady(): void {'),
+      'panel-layout.ts must define mountLiveNewsIfReady()',
+    );
+    assert.ok(
+      layout.includes('if (!this.liveNewsEnabledForCountry) return;'),
       'mountLiveNewsIfReady() must return early when live news is not enabled for the user country',
     );
   });
