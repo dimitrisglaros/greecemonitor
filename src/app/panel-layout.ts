@@ -104,6 +104,7 @@ import { resolveNewsCategories, enabledNewsCategoryKeys } from '@/config/feed-re
 import { BETA_MODE } from '@/config/beta';
 import { t } from '@/services/i18n';
 import { getCurrentTheme } from '@/utils';
+import { resolveUserCountryCode } from '@/utils/user-location';
 import { trackCriticalBannerAction } from '@/services/analytics';
 import { CustomWidgetPanel } from '@/components/CustomWidgetPanel';
 import { openWidgetChatModal } from '@/components/WidgetChatModal';
@@ -194,6 +195,7 @@ export class PanelLayoutManager implements AppModule {
   private boundWidgetCreatorHandler: ((e: Event) => void) | null = null;
   private unsubscribeEntitlementChange: (() => void) | null = null;
   private unsubscribePaymentFailureBanner: (() => void) | null = null;
+  private liveNewsEnabledForCountry = false;
 
   constructor(ctx: AppContext, callbacks: PanelLayoutManagerCallbacks) {
     this.ctx = ctx;
@@ -328,6 +330,8 @@ export class PanelLayoutManager implements AppModule {
   }
 
   async init(): Promise<void> {
+    const countryCode = await resolveUserCountryCode();
+    this.liveNewsEnabledForCountry = countryCode?.toUpperCase() === 'GR';
     await this.renderLayout();
 
     // Subscribe to auth state for reactive panel gating on web
@@ -838,6 +842,7 @@ export class PanelLayoutManager implements AppModule {
    */
   mountLiveNewsIfReady(): void {
     if (this.ctx.panels['live-news']) return;
+    if (!this.liveNewsEnabledForCountry) return;
     if (getDefaultLiveChannels().length === 0 && loadChannelsFromStorage().length === 0) return;
     const panel = new LiveNewsPanel();
     this.ctx.panels['live-news'] = panel;
@@ -1270,6 +1275,7 @@ export class PanelLayoutManager implements AppModule {
     }
 
     if (this.shouldCreatePanel('live-news') &&
+        this.liveNewsEnabledForCountry &&
         (getDefaultLiveChannels().length > 0 || loadChannelsFromStorage().length > 0)) {
       this.ctx.panels['live-news'] = new LiveNewsPanel();
     }
